@@ -1,0 +1,87 @@
+const allItems = $items();
+
+const now = new Date();
+const sevenDaysAgo = new Date(now);
+sevenDaysAgo.setDate(now.getDate() - 7);
+
+// Helper to get week number in a month
+function getWeekNumberInMonth(date) {
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+  return Math.ceil((date.getDate() + firstDay.getDay()) / 7);
+}
+
+// Helper to get Indonesian month name
+function getIndonesianMonthName(monthIndex) {
+  const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", 
+                  "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+  return months[monthIndex];
+}
+
+const weekNumber = getWeekNumberInMonth(now);
+const monthName = getIndonesianMonthName(now.getMonth());
+
+// Recap structure: { Chat_ID: { nama, recap: { Habit: Count } } }
+const userRecaps = {};
+
+allItems.forEach(item => {
+  try {
+    const { Tanggal, Chat_ID, Nama, Habit } = item.json;
+
+    if (Tanggal && Chat_ID && Nama) {
+      const tanggal = new Date(Tanggal);
+
+      if (!isNaN(tanggal) && tanggal >= sevenDaysAgo) {
+        if (!userRecaps[Chat_ID]) {
+          userRecaps[Chat_ID] = {
+            nama: Nama,
+            recap: {
+              "Tidur": 0,
+              "Olahraga": 0,
+              "Ibadah": 0,
+              "Makan Sehat": 0,
+              "Produktivitas": 0,
+              "Lainnya": 0
+            }
+          };
+        }
+
+        if (Habit && userRecaps[Chat_ID].recap[Habit] !== undefined) {
+          userRecaps[Chat_ID].recap[Habit] += 1;
+        } else if (Habit) {
+          userRecaps[Chat_ID].recap["Lainnya"] += 1;
+        }
+      }
+    }
+  } catch (error) {
+    console.error("Error processing item:", item, error);
+  }
+});
+
+const output = [];
+
+Object.entries(userRecaps).forEach(([chatId, { nama, recap }]) => {
+  const csvRows = [["Habit", "Count"]];
+  Object.entries(recap).forEach(([habit, count]) => {
+    csvRows.push([habit, count]);
+  });
+
+  const csvContent = csvRows.map(row => row.join(",")).join("\n");
+  const binaryData = Buffer.from(csvContent).toString("base64");
+
+  output.push({
+    json: {
+      chatId,
+      nama,
+      message: `Rekap mingguanmu (${nama} : ${chatId}) berhasil dibuat.`
+    },
+    binary: {
+      data: {
+        data: binaryData,
+        mimeType: "text/csv",
+        fileName: `rekap-minggu-ke-${weekNumber}-${monthName}-${nama}-${chatId}.csv`
+      }
+    }
+  });
+});
+
+return output;
