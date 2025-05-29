@@ -1,0 +1,325 @@
+{
+  "name": "Daily Habit Tracker",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "ad12ccf4-6f91-41d9-a4b3-4b897f0738b4",
+      "name": "Telegram Trigger",
+      "webhookId": "3949bd71-c1e4-4a8a-bcd7-52043eb16686",
+      "credentials": {
+        "telegramApi": {
+          "id": "UyibvaXDUxJeOirD",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const text = $json.message.text.toLowerCase();\n\nlet habit = \"Lainnya\"; // Default\n\n// Keywords for Olahraga (Sports/Exercise)\nif ([\"olahraga\", \"lari\", \"jogging\", \"push-up\", \"senam\", \"latihan\", \"workout\", \"gym\", \"berenang\", \"sepeda\", \"yoga\", \"kardio\", \"fitness\", \"jalan kaki\", \"hiking\", \"badminton\", \"futsal\", \"basket\", \"angkat beban\", \"skipping\", \"peregangan\", \"aerobik\"].some(k => text.includes(k))) {\n  habit = \"Olahraga\";\n} \n// Keywords for Tidur (Sleep)\nelse if ([\"tidur\", \"istirahat\", \"ngantuk\", \"tidur siang\", \"tidur malam\", \"bobo\", \"lelap\", \"power nap\", \"rebahan\", \"istirahat cukup\"].some(k => text.includes(k))) {\n  habit = \"Tidur\";\n} \n// Keywords for Ibadah (Worship)\nelse if ([\"sholat\", \"doa\", \"dzikir\", \"ibadah\", \"baca quran\", \"puasa\", \"mengaji\", \"tahajud\", \"dhuha\", \"witir\", \"sedekah\", \"infaq\", \"tarawih\", \"pengajian\", \"ceramah\", \"itikaf\"].some(k => text.includes(k))) {\n  habit = \"Ibadah\";\n} \n// Keywords for Makan Sehat (Healthy Eating)\nelse if ([\"makan\", \"sarapan\", \"buah\", \"sayur\", \"gizi\", \"air putih\", \"minum\", \"nutrisi\", \"diet\", \"bekal\", \"smoothie\", \"salad\", \"oatmeal\", \"jus\", \"makan siang\", \"makan malam\", \"hindari gula\", \"kurangi minyak\", \"rebus\", \"kukus\"].some(k => text.includes(k))) {\n  habit = \"Makan Sehat\";\n} \n// Keywords for Produktivitas (Productivity)\nelse if ([\"belajar\", \"ngoding\", \"kuliah\", \"kerja\", \"rapat\", \"tugas\", \"meeting\", \"presentasi\", \"deadline\", \"proyek\", \"menulis\", \"membaca buku\", \"riset\", \"webinar\", \"kursus\", \"workshop\", \"merencanakan\", \"menyelesaikan\", \"fokus\", \"bekerja\"].some(k => text.includes(k))) {\n  habit = \"Produktivitas\";\n}\n\nreturn [\n  {\n    json: {\n      tanggal: $now.toFormat(\"yyyy-MM-dd\"),\n      chat_id: $json.message.from.id,\n      nama: $json.message.from.first_name,\n      habit,\n      pesan: $json.message.text\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        220,
+        0
+      ],
+      "id": "27182c6c-af95-43bb-bb20-89bc144b7ade",
+      "name": "Code"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1LMOwYODDD6Gzb2A8Yo3FEWXN4n0kGoPlQ-2mxU3SWQU",
+          "mode": "list",
+          "cachedResultName": "My Daily Habit Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LMOwYODDD6Gzb2A8Yo3FEWXN4n0kGoPlQ-2mxU3SWQU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LMOwYODDD6Gzb2A8Yo3FEWXN4n0kGoPlQ-2mxU3SWQU/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Tanggal": "={{ $json.tanggal }}",
+            "Chat_ID": "={{ $json.chat_id }}",
+            "Nama": "={{ $json.nama }}",
+            "Habit": "={{ $json.habit }}",
+            "Pesan": "={{ $json.pesan }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Tanggal",
+              "displayName": "Tanggal",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Chat_ID",
+              "displayName": "Chat_ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nama",
+              "displayName": "Nama",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Habit",
+              "displayName": "Habit",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Pesan",
+              "displayName": "Pesan",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        440,
+        0
+      ],
+      "id": "8615f0e0-cc31-4546-a218-796f75ad60e1",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WMerXN7QSjtpU8bm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $json.Chat_ID }}",
+        "text": "Terima kasih! Habit kamu hari ini sudah dicatat. Tunggu aku mengirimkan rekap data habitmu setiap minggunya.",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        0
+      ],
+      "id": "2f12f331-3f25-4bbd-8621-b9e7e59cb9b3",
+      "name": "Telegram",
+      "webhookId": "5c95b557-d8fa-4150-87b0-cd1cc7b14768",
+      "credentials": {
+        "telegramApi": {
+          "id": "UyibvaXDUxJeOirD",
+          "name": "Telegram account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        200
+      ],
+      "id": "926f462c-bf18-4846-87fa-20e0ce2dee09",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1LMOwYODDD6Gzb2A8Yo3FEWXN4n0kGoPlQ-2mxU3SWQU",
+          "mode": "list",
+          "cachedResultName": "My Daily Habit Log",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LMOwYODDD6Gzb2A8Yo3FEWXN4n0kGoPlQ-2mxU3SWQU/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LMOwYODDD6Gzb2A8Yo3FEWXN4n0kGoPlQ-2mxU3SWQU/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.6,
+      "position": [
+        220,
+        200
+      ],
+      "id": "69c63113-16ca-455a-af3f-8c5147105cd3",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WMerXN7QSjtpU8bm",
+          "name": "Google Sheets account 3"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const allItems = $items();\n\nconst now = new Date();\nconst sevenDaysAgo = new Date(now);\nsevenDaysAgo.setDate(now.getDate() - 7);\n\n// Helper to get week number in a month\nfunction getWeekNumberInMonth(date) {\n  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);\n  return Math.ceil((date.getDate() + firstDay.getDay()) / 7);\n}\n\n// Helper to get Indonesian month name\nfunction getIndonesianMonthName(monthIndex) {\n  const months = [\"Januari\", \"Februari\", \"Maret\", \"April\", \"Mei\", \"Juni\", \n                  \"Juli\", \"Agustus\", \"September\", \"Oktober\", \"November\", \"Desember\"];\n  return months[monthIndex];\n}\n\nconst weekNumber = getWeekNumberInMonth(now);\nconst monthName = getIndonesianMonthName(now.getMonth());\n\n// Recap structure: { Chat_ID: { nama, recap: { Habit: Count } } }\nconst userRecaps = {};\n\nallItems.forEach(item => {\n  try {\n    const { Tanggal, Chat_ID, Nama, Habit } = item.json;\n\n    if (Tanggal && Chat_ID && Nama) {\n      const tanggal = new Date(Tanggal);\n\n      if (!isNaN(tanggal) && tanggal >= sevenDaysAgo) {\n        if (!userRecaps[Chat_ID]) {\n          userRecaps[Chat_ID] = {\n            nama: Nama,\n            recap: {\n              \"Tidur\": 0,\n              \"Olahraga\": 0,\n              \"Ibadah\": 0,\n              \"Makan Sehat\": 0,\n              \"Produktivitas\": 0,\n              \"Lainnya\": 0\n            }\n          };\n        }\n\n        if (Habit && userRecaps[Chat_ID].recap[Habit] !== undefined) {\n          userRecaps[Chat_ID].recap[Habit] += 1;\n        } else if (Habit) {\n          userRecaps[Chat_ID].recap[\"Lainnya\"] += 1;\n        }\n      }\n    }\n  } catch (error) {\n    console.error(\"Error processing item:\", item, error);\n  }\n});\n\nconst output = [];\n\nObject.entries(userRecaps).forEach(([chatId, { nama, recap }]) => {\n  const csvRows = [[\"Habit\", \"Count\"]];\n  Object.entries(recap).forEach(([habit, count]) => {\n    csvRows.push([habit, count]);\n  });\n\n  const csvContent = csvRows.map(row => row.join(\",\")).join(\"\\n\");\n  const binaryData = Buffer.from(csvContent).toString(\"base64\");\n\n  output.push({\n    json: {\n      chatId,\n      nama,\n      message: `Rekap mingguanmu (${nama} : ${chatId}) berhasil dibuat.`\n    },\n    binary: {\n      data: {\n        data: binaryData,\n        mimeType: \"text/csv\",\n        fileName: `rekap-minggu-ke-${weekNumber}-${monthName}-${nama}-${chatId}.csv`\n      }\n    }\n  });\n});\n\nreturn output;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        200
+      ],
+      "id": "9d40b9cf-3b16-42f5-bd05-b6723ebc9a63",
+      "name": "Code1"
+    },
+    {
+      "parameters": {
+        "operation": "sendDocument",
+        "chatId": "={{ $json.chatId }}",
+        "binaryData": true,
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        200
+      ],
+      "id": "45ffeedc-f7c0-408b-ad3d-e5d62d5e4069",
+      "name": "Telegram1",
+      "webhookId": "98cedf09-d3d0-4e37-9afb-19226c560eb0",
+      "credentials": {
+        "telegramApi": {
+          "id": "UyibvaXDUxJeOirD",
+          "name": "Telegram account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "main": [
+        [
+          {
+            "node": "Code1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code1": {
+      "main": [
+        [
+          {
+            "node": "Telegram1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "78e1c4bd-ba59-4829-8c53-ad4d44584d14",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "2c16f84513320f6cbb29a6d9cc8458109ec1a3417a9cbf67636b049f07c64c3e"
+  },
+  "id": "saMgWXV4QeM0DdVJ",
+  "tags": []
+}
