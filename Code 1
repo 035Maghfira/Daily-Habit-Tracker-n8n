@@ -1,0 +1,36 @@
+Code 1 :
+const text = $json.message.text.toLowerCase();
+
+let habit = "Lainnya"; // Default
+
+// Keywords for Olahraga (Sports/Exercise)
+if (["olahraga", "lari", "jogging", "push-up", "senam", "latihan", "workout", "gym", "berenang", "sepeda", "yoga", "kardio", "fitness", "jalan kaki", "hiking", "badminton", "futsal", "basket", "angkat beban", "skipping", "peregangan", "aerobik"].some(k => text.includes(k))) {
+  habit = "Olahraga";
+} 
+// Keywords for Tidur (Sleep)
+else if (["tidur", "istirahat", "ngantuk", "tidur siang", "tidur malam", "bobo", "lelap", "power nap", "rebahan", "istirahat cukup"].some(k => text.includes(k))) {
+  habit = "Tidur";
+} 
+// Keywords for Ibadah (Worship)
+else if (["sholat", "doa", "dzikir", "ibadah", "baca quran", "puasa", "mengaji", "tahajud", "dhuha", "witir", "sedekah", "infaq", "tarawih", "pengajian", "ceramah", "itikaf"].some(k => text.includes(k))) {
+  habit = "Ibadah";
+} 
+// Keywords for Makan Sehat (Healthy Eating)
+else if (["makan", "sarapan", "buah", "sayur", "gizi", "air putih", "minum", "nutrisi", "diet", "bekal", "smoothie", "salad", "oatmeal", "jus", "makan siang", "makan malam", "hindari gula", "kurangi minyak", "rebus", "kukus"].some(k => text.includes(k))) {
+  habit = "Makan Sehat";
+} 
+// Keywords for Produktivitas (Productivity)
+else if (["belajar", "ngoding", "kuliah", "kerja", "rapat", "tugas", "meeting", "presentasi", "deadline", "proyek", "menulis", "membaca buku", "riset", "webinar", "kursus", "workshop", "merencanakan", "menyelesaikan", "fokus", "bekerja"].some(k => text.includes(k))) {
+  habit = "Produktivitas";
+}
+
+return [
+  {
+    json: {
+      tanggal: $now.toFormat("yyyy-MM-dd"),
+      nama: $json.message.from.first_name,
+      habit,
+      pesan: $json.message.text
+    }
+  }
+];
