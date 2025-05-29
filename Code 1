@@ -1,4 +1,3 @@
-Code 1 :
 const text = $json.message.text.toLowerCase();
 
 let habit = "Lainnya"; // Default
@@ -28,6 +27,7 @@ return [
   {
     json: {
       tanggal: $now.toFormat("yyyy-MM-dd"),
+      chat_id: $json.message.from.id,
       nama: $json.message.from.first_name,
       habit,
       pesan: $json.message.text
